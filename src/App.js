@@ -1,4 +1,13 @@
-import { Card, Col, Container, Grid, Row, Text } from '@nextui-org/react';
+import {
+    Avatar,
+    Card,
+    Col,
+    Container,
+    Grid,
+    Row,
+    Text,
+} from '@nextui-org/react';
+import toast from 'react-hot-toast';
 import Particles from 'react-tsparticles';
 // import Paho from 'paho-mqtt';
 import './App.css';
@@ -45,6 +54,11 @@ function App() {
     // };
 
     // client.connect(options);
+
+    const handleClickedCard = (name) => {
+        toast.success(name);
+    };
+
     return (
         <div className="background">
             <Particles params={ParticleConfig}></Particles>
@@ -65,7 +79,13 @@ function App() {
                 <Grid.Container gap={2} justify="center">
                     {patterns.map((pattern, i) => (
                         <Grid xs={6} sm={4} key={i}>
-                            <Card width="100%" cover clickable hoverable>
+                            <Card
+                                width="100%"
+                                cover
+                                clickable
+                                hoverable
+                                onClick={() => handleClickedCard(pattern.name)}
+                            >
                                 <Card.Header
                                     style={{
                                         position: 'absolute',
@@ -98,6 +118,36 @@ function App() {
                         </Grid>
                     ))}
                 </Grid.Container>
+
+                <div className="center">
+                    <p>Done with &#128151; by</p>
+                    <Avatar.Group>
+                        <Avatar
+                            size="large"
+                            pointer
+                            src="./assets/luis.jpg"
+                            bordered
+                            color="gradient"
+                            stacked
+                        />
+                        <Avatar
+                            size="large"
+                            pointer
+                            src="./assets/omar.jpg"
+                            bordered
+                            color="gradient"
+                            stacked
+                        />
+                        <Avatar
+                            size="large"
+                            pointer
+                            src="./assets/daniel.jpg"
+                            bordered
+                            color="gradient"
+                            stacked
+                        />
+                    </Avatar.Group>
+                </div>
             </Container>
         </div>
     );

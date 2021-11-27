@@ -1,16 +1,18 @@
+import { CssBaseline } from '@nextui-org/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { Toaster } from 'react-hot-toast';
 import App from './App';
+import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { CssBaseline } from '@nextui-org/react';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <CssBaseline />
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <CssBaseline />
+        <App />
+        <Toaster />
+    </React.StrictMode>,
+    document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function
