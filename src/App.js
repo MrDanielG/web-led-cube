@@ -7,6 +7,7 @@ import {
     Row,
     Text,
 } from '@nextui-org/react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import Particles from 'react-tsparticles';
 // import Paho from 'paho-mqtt';
@@ -14,7 +15,14 @@ import './App.css';
 import ParticleConfig from './data/particlesjs-config.json';
 import { default as patterns } from './data/patterns.json';
 
+const devImgs = [
+    './assets/luis.jpg',
+    './assets/omar.jpg',
+    './assets/daniel.jpg',
+];
+
 function App() {
+    const [isDisabled, setIsDisabled] = useState(false);
     // const clientId = 'client_id' + Math.floor(Math.random() * 1000000) + 1;
     // const client = new Paho.Client('driver.cloudmqtt.com', 38651, clientId);
 
@@ -56,7 +64,13 @@ function App() {
     // client.connect(options);
 
     const handleClickedCard = (name) => {
+        if (isDisabled) return;
+
         toast.success(name);
+        setIsDisabled(true);
+        setTimeout(() => {
+            setIsDisabled(false);
+        }, 3000);
     };
 
     return (
@@ -73,7 +87,7 @@ function App() {
                             textAlign: 'center',
                         }}
                     >
-                        Proyecto Cubo Led
+                        &#127876; Proyecto Cubo Led
                     </Text>
                 </Row>
                 <Grid.Container gap={2} justify="center">
@@ -82,8 +96,8 @@ function App() {
                             <Card
                                 width="100%"
                                 cover
-                                clickable
-                                hoverable
+                                clickable={!isDisabled}
+                                hoverable={!isDisabled}
                                 onClick={() => handleClickedCard(pattern.name)}
                             >
                                 <Card.Header
@@ -122,30 +136,16 @@ function App() {
                 <div className="center">
                     <p>Done with &#128151; by</p>
                     <Avatar.Group>
-                        <Avatar
-                            size="large"
-                            pointer
-                            src="./assets/luis.jpg"
-                            bordered
-                            color="gradient"
-                            stacked
-                        />
-                        <Avatar
-                            size="large"
-                            pointer
-                            src="./assets/omar.jpg"
-                            bordered
-                            color="gradient"
-                            stacked
-                        />
-                        <Avatar
-                            size="large"
-                            pointer
-                            src="./assets/daniel.jpg"
-                            bordered
-                            color="gradient"
-                            stacked
-                        />
+                        {devImgs.map((img) => (
+                            <Avatar
+                                size="large"
+                                pointer
+                                src={img}
+                                bordered
+                                color="gradient"
+                                stacked
+                            />
+                        ))}
                     </Avatar.Group>
                 </div>
             </Container>
