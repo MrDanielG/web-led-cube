@@ -1,6 +1,8 @@
 import { Card, Col, Container, Grid, Row, Text } from '@nextui-org/react';
+import Particles from 'react-tsparticles';
 // import Paho from 'paho-mqtt';
 import './App.css';
+import ParticleConfig from './data/particlesjs-config.json';
 import { default as patterns } from './data/patterns.json';
 
 function App() {
@@ -43,51 +45,61 @@ function App() {
     // };
 
     // client.connect(options);
-
     return (
-        <Container className="">
-            <Row justify="center" align="center">
-                <Text h1 color="black" style={{ margin: 50 }}>
-                    Proyecto Cubo Led
-                </Text>
-            </Row>
-            <Grid.Container gap={2} justify="center">
-                {patterns.map((pattern, i) => (
-                    <Grid xs={6} sm={4} key={i}>
-                        <Card width="100%" cover clickable hoverable>
-                            <Card.Header
-                                style={{
-                                    position: 'absolute',
-                                    zIndex: 1,
-                                    top: 5,
-                                }}
-                            >
-                                <Col>
-                                    <Text
-                                        size={12}
-                                        weight="bold"
-                                        transform="uppercase"
-                                        color="#ffffffAA"
-                                    >
-                                        {pattern.description}
-                                    </Text>
-                                    <Text h4 color="white">
-                                        {pattern.name}
-                                    </Text>
-                                </Col>
-                            </Card.Header>
-                            <Card.Image
-                                autoResize={false}
-                                src={pattern.img_url}
-                                height={200}
-                                width="100%"
-                                alt="Card image background"
-                            />
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid.Container>
-        </Container>
+        <div className="background">
+            <Particles params={ParticleConfig}></Particles>
+            <Container>
+                <Row justify="center" align="center">
+                    <Text
+                        h1
+                        color="white"
+                        style={{
+                            margin: 50,
+                            fontWeight: 'lighter',
+                            textAlign: 'center',
+                        }}
+                    >
+                        Proyecto Cubo Led
+                    </Text>
+                </Row>
+                <Grid.Container gap={2} justify="center">
+                    {patterns.map((pattern, i) => (
+                        <Grid xs={6} sm={4} key={i}>
+                            <Card width="100%" cover clickable hoverable>
+                                <Card.Header
+                                    style={{
+                                        position: 'absolute',
+                                        zIndex: 1,
+                                        top: 5,
+                                    }}
+                                >
+                                    <Col>
+                                        <Text
+                                            size={12}
+                                            weight="bold"
+                                            transform="uppercase"
+                                            color="#ffffffAA"
+                                        >
+                                            {pattern.description}
+                                        </Text>
+                                        <Text h4 color="white">
+                                            {pattern.name}
+                                        </Text>
+                                    </Col>
+                                </Card.Header>
+                                <Card.Image
+                                    autoResize={false}
+                                    src={pattern.img_url}
+                                    height={200}
+                                    width="100%"
+                                    alt="Card image background"
+                                />
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid.Container>
+            </Container>
+        </div>
     );
 }
 

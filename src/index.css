@@ -12,7 +12,7 @@ code {
         monospace;
 }
 
-.bgd {
-    background-color: black;
+.background {
+    background-color: #3d3c3c;
     min-height: 100vh;
 }
