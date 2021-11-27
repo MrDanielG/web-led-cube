@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <PubSubClient.h>
 #include <WiFi.h>
 
@@ -16,13 +17,13 @@ void turnLed(int x, int y, int z, bool state)
   pos += (y - 1);
   if (state)
   {
-    digitalWrite(columns[pos], LOW);
-    digitalWrite(levels[level], HIGH);
+    digitalWrite(columns[pos], 0);
+    digitalWrite(levels[level], 1);
   }
   else
   {
-    digitalWrite(columns[pos], HIGH);
-    digitalWrite(levels[level], LOW);
+    digitalWrite(columns[pos], 1);
+    digitalWrite(levels[level], 0);
   }
 }
 // change the state of a single level
@@ -171,55 +172,80 @@ int value = 0;
 
 void callback(char* topic, byte* payload, unsigned int length)
 {
+  Serial.print("Mensaje recibido bajo el tópico ->");
+  Serial.println(topic);
 
-  if ((char)payload[0] == '0')
-  {
+  for(int i=0;i<length;i++){
+    Serial.print((char)payload[i]);
+  }
+  Serial.println("");
+  if ((char)payload[0] == '0'){
     turnAllLedsOff();
   }
   else if((char)payload[0] == '1'){
-    turnAllLedsOff();
     turnAllLedsOn();
+    turnAllLedsOff();
   }
   else if((char)payload[0] == '2'){
-    turnAllLedsOff();
     flickerLevelByLevel(4);
+    delay(50);
+    turnAllLedsOff();
   }
   else if((char)payload[0] == '3'){
-    turnAllLedsOff();
     turnOnColumnByColumn(false);
+    turnAllLedsOff();
   }
   else if((char)payload[0] == '4'){
-    turnAllLedsOff();
     xmasTree();
+    turnAllLedsOff();
+
   }
   else if((char)payload[0] == '5'){
     turnAllLedsOff();
     drops();
+    turnAllLedsOff();
   }
 }
 void reconnect(){
   while (!client.connected())
   {
+    Serial.println("Intentando Conexión MQTT");
 
     String clientId = "iot_1_";
     clientId = String (random(0xffff), HEX);
 
     if(client.connect(clientId.c_str(),mqtt_user,mqtt_pass))
     {
-      // client.publish("salida_Omar", "primer mensaje");
+      Serial.println("Conexión MQTT exitosa!!");
+      client.publish("salida_Omar", "primer mensaje");
       client.subscribe ("entrada_Omar");
     }
     else
     {
+      Serial.println ("Falló la conexión ");
+      Serial.print(client.state());
+      Serial.print("Se intentará de nuevo en 5 segundos");
       delay(5000);
     }
   }
 }
 void setup_wifi(){
+  Serial.println("");
+  Serial.print("Conectando a -> ");
+  Serial.println(ssid);
+  Serial.println("");
+
   WiFi.begin(ssid, password);
+
   while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
     delay(250);
   }
+  Serial.println("");
+  Serial.println("Conexión Exitosa");
+
+  Serial.print("Mi ip es -> ");
+  Serial.println(WiFi.localIP());
 }
 
 void setup()
@@ -235,10 +261,10 @@ void setup()
     pinMode(levels[i], OUTPUT);
   }
   randomSeed(analogRead(34));
+  Serial.begin(115200);
   setup_wifi();
   client.setServer(mqtt_server, mqtt_port);
   client.setCallback(callback);
-  turnAllLedsOff();
 }
 /*
 turnAllLedsOff() -> 0
@@ -251,9 +277,22 @@ drops() -> 5
 void loop()
 {
   // put your main code here, to run repeatedly:
+  /*turnAllLedsOff();
+  delay(timeBetweenEffects);
+  turnAllLedsOn();
+  delay(timeBetweenEffects);
+  turnAllLedsOff();
+  delay(timeBetweenEffects);
+  turnOnColumnByColumn(false);
+  delay(timeBetweenEffects);
+  turnAllLedsOff();
+  flickerLevelByLevel(4);
+  turnAllLedsOff();
+  xmasTree();
+  turnAllLedsOff();
+  drops();*/
   if(client.connected() == false){
     reconnect();
   }
   client.loop();
-  
 }
