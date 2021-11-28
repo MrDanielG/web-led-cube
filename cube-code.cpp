@@ -184,11 +184,15 @@ void cubeSizeChangeEffect() {
   for (int i = 0; i <= 4; i++)
   {
     customSizeCube(i, true);
+    delay(timeBetweenEffects / 4);
+    customSizeCube(i, false);
   }
   delay(timeBetweenEffects / 4);
   for (int i = 4; i > 0; i--)
   {
     customSizeCube(i, true);
+    delay(timeBetweenEffects / 4);
+    customSizeCube(i, false);
   }
 }
 
