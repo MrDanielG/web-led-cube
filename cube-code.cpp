@@ -237,6 +237,10 @@ void callback(char* topic, byte* payload, unsigned int length)
     turnAllLedsOff();
     drops();
   }
+  else if((char)payload[0] == '6'){
+    turnAllLedsOff();
+    cubeResizing();
+  }
 }
 void reconnect(){
   while (!client.connected())
