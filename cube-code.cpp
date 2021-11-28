@@ -154,7 +154,7 @@ void drops()
     }
   }
 }
-// Form a cube with a custom size
+// Displays a cube with a custom size
 void customSizeCube(int size, int state) {
   if (size == 1)
   {
@@ -178,9 +178,9 @@ void customSizeCube(int size, int state) {
     state ? turnAllLedsOn() : turnAllLedsOff();
   }
 }
-// Displays a cube of a larger or smaller size
-// than the previous one depending on the sense
-void cubeSizeChangeEffect() {
+// Displays a cube of custom size larger or smaller than
+// the previous one depending on the direction of the cycle.
+void cubeResizing() {
   for (int i = 0; i <= 4; i++)
   {
     customSizeCube(i, true);
