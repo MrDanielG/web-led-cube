@@ -154,6 +154,43 @@ void drops()
     }
   }
 }
+// Form a cube with a custom size
+void customSizeCube(int size, int state) {
+  if (size == 1)
+  {
+    turnLed(1, 1, 1, state);
+  }
+  if (size > 1 && size < 4)
+  {
+    for (int i=1; i<=size; i++)
+    {
+      for (int j=1; j<=size; j++)
+      {
+        for (int k=1; k<=size; k++)
+        {
+          turnLed(j, k, i, state);
+        }
+      }
+    }
+  }
+  if (size == 4)
+  {
+    state ? turnAllLedsOn() : turnAllLedsOff();
+  }
+}
+// Displays a cube of a larger or smaller size
+// than the previous one depending on the sense
+void cubeSizeChangeEffect() {
+  for (int i = 0; i <= 4; i++)
+  {
+    customSizeCube(i, true);
+  }
+  delay(timeBetweenEffects / 4);
+  for (int i = 4; i > 0; i--)
+  {
+    customSizeCube(i, true);
+  }
+}
 
 const char* ssid = "IZZI-6FDA";
 const char* password =  "D4AB826E6FDA";
