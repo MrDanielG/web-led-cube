@@ -175,71 +175,55 @@ void customSizeCube(int size, int state) {
   }
 }
 // Displays a cube of custom size larger or smaller than
-// the previous one depending on the direction of the cycle.
+// the previous one depending on the direction of the cycle
 void cubeResizing() {
-  for (int i=1; i<=4; i++)
+  for (int i=1; i<4; i++)
   {
     customSizeCube(i, true);
-    delay(timeBetweenEffects / 2);
+    delay(timeBetweenEffects);
     customSizeCube(i, false);
   }
-  delay(timeBetweenEffects / 2);
-  for (int j=4; j>0; j--)
+  turnAllLedsOn();
+  delay(timeBetweenEffects);
+  turnAllLedsOff();
+  for (int j=3; j>0; j--)
   {
     customSizeCube(j, true);
-    delay(timeBetweenEffects / 2);
+    delay(timeBetweenEffects);
     customSizeCube(j, false);
   }
 }
-
-void turnColumnWithDelay(int x, int y, bool state)
+void turnOffLed(int x, int y, int z)
 {
-  turnColumn(x, y, state);
+  turnLed(x, y, z, false);
   delay(timeBetweenEffects / 4);
 }
-// Spiral by columns
-void positiveSpiral()
+// The cube is traversed level by level
+// and each level simulates a spiral
+void spiralLevelByLevel()
 {
-  bool state = true;
-  turnColumnWithDelay(3, 2, state);
-  turnColumnWithDelay(3, 3, state);
-  for (int i = 3; i > 0; i--)
+  turnAllLedsOn();
+  delay(timeBetweenEffects / 2);
+  for (int level=1; level<=4; level++)
   {
-    turnColumnWithDelay(2, i, state);
+    for (int i=1; i<=4; i++)
+    {
+      turnOffLed(1, i, level);
+    }
+    turnOffLed(2, 4, level);
+    turnOffLed(3, 4, level);
+    for (int j=4; j>0; j--)
+    {
+      turnOffLed(4, j, level);
+    }
+    turnOffLed(3, 1, level);
+    for (int k=1; k<4; k++)
+    {
+      turnOffLed(2, k, level);
+    }
+    turnOffLed(3, 3, level);
+    turnOffLed(3, 2, level);
   }
-  turnColumnWithDelay(3, 1, state);
-  for (int j=1; j<=4; j++)
-  {
-    turnColumnWithDelay(4, j, state);
-  }
-  turnColumnWithDelay(3, 4, state);
-  turnColumnWithDelay(2, 4, state);
-  for (int i=4; i>0; i--)
-  {
-    turnColumnWithDelay(1, i, state);
-  }
-}
-// Spiral by columns
-void negativeSpiral()
-{
-  bool state = false;
-  for (int i=1; i<=4; i++)
-  {
-    turnColumnWithDelay(1, i, state);
-  }
-  turnColumnWithDelay(2, 4, state);
-  turnColumnWithDelay(3, 4, state);
-  for (int j=4; j>0; j--)
-  {
-    turnColumnWithDelay(4, j, state);
-  }
-  turnColumnWithDelay(3, 1, state);
-  for (int i=1; i<4; i++)
-  {
-    turnColumnWithDelay(2, i, state);
-  }
-  turnColumnWithDelay(3, 3, state);
-  turnColumnWithDelay(3, 2, state);
 }
 
 const char* ssid = "IZZI-6FDA";
@@ -289,8 +273,7 @@ void callback(char* topic, byte* payload, unsigned int length)
   }
   else if((char)payload[0] == '7'){
     turnAllLedsOff();
-    positiveSpiral();
-    negativeSpiral();
+    spiralLevelByLevel();
   }
 }
 void reconnect(){
