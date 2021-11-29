@@ -160,7 +160,7 @@ void customSizeCube(int size, int state) {
   {
     turnLed(1, 1, 1, state);
   }
-  if (size > 1 && size < 4)
+  if (size > 1 && size <= 4)
   {
     for (int i=1; i<=size; i++)
     {
@@ -168,32 +168,78 @@ void customSizeCube(int size, int state) {
       {
         for (int k=1; k<=size; k++)
         {
-          turnLed(j, k, i, state);
+          turnLed(k, j, i, state);
         }
       }
     }
-  }
-  if (size == 4)
-  {
-    state ? turnAllLedsOn() : turnAllLedsOff();
   }
 }
 // Displays a cube of custom size larger or smaller than
 // the previous one depending on the direction of the cycle.
 void cubeResizing() {
-  for (int i = 0; i <= 4; i++)
+  for (int i=1; i<=4; i++)
   {
     customSizeCube(i, true);
-    delay(timeBetweenEffects / 4);
+    delay(timeBetweenEffects / 2);
     customSizeCube(i, false);
   }
+  delay(timeBetweenEffects / 2);
+  for (int j=4; j>0; j--)
+  {
+    customSizeCube(j, true);
+    delay(timeBetweenEffects / 2);
+    customSizeCube(j, false);
+  }
+}
+
+void turnColumnWithDelay(int x, int y, bool state)
+{
+  turnColumn(x, y, state);
   delay(timeBetweenEffects / 4);
-  for (int i = 4; i > 0; i--)
+}
+// Spiral by columns
+void positiveSpiral()
+{
+  bool state = true;
+  turnColumnWithDelay(3, 2, state);
+  turnColumnWithDelay(3, 3, state);
+  for (int i = 3; i > 0; i--)
   {
-    customSizeCube(i, true);
-    delay(timeBetweenEffects / 4);
-    customSizeCube(i, false);
+    turnColumnWithDelay(2, i, state);
   }
+  turnColumnWithDelay(3, 1, state);
+  for (int j=1; j<=4; j++)
+  {
+    turnColumnWithDelay(4, j, state);
+  }
+  turnColumnWithDelay(3, 4, state);
+  turnColumnWithDelay(2, 4, state);
+  for (int i=4; i>0; i--)
+  {
+    turnColumnWithDelay(1, i, state);
+  }
+}
+// Spiral by columns
+void negativeSpiral()
+{
+  bool state = false;
+  for (int i=1; i<=4; i++)
+  {
+    turnColumnWithDelay(1, i, state);
+  }
+  turnColumnWithDelay(2, 4, state);
+  turnColumnWithDelay(3, 4, state);
+  for (int j=4; j>0; j--)
+  {
+    turnColumnWithDelay(4, j, state);
+  }
+  turnColumnWithDelay(3, 1, state);
+  for (int i=1; i<4; i++)
+  {
+    turnColumnWithDelay(2, i, state);
+  }
+  turnColumnWithDelay(3, 3, state);
+  turnColumnWithDelay(3, 2, state);
 }
 
 const char* ssid = "IZZI-6FDA";
@@ -240,6 +286,11 @@ void callback(char* topic, byte* payload, unsigned int length)
   else if((char)payload[0] == '6'){
     turnAllLedsOff();
     cubeResizing();
+  }
+  else if((char)payload[0] == '7'){
+    turnAllLedsOff();
+    positiveSpiral();
+    negativeSpiral();
   }
 }
 void reconnect(){
