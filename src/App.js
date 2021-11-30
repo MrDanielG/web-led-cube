@@ -89,6 +89,8 @@ function App() {
                             <Card
                                 width="100%"
                                 cover
+                                clickable
+                                hoverable
                                 onClick={() =>
                                     handleClickedCard(
                                         pattern.name,
