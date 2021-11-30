@@ -3,49 +3,50 @@
 
 const int nColumns = 16;
 const int nLevels = 4;
-int columns[nColumns] = {15, 22, 21, 23, 32, 4, 19, 5, 33, 2, 18, 1, 25, 26, 17, 3};
+int columns [5][5] = {
+  {0,0,0,0,0},
+  {0,15,22,21,23},
+  {0,32,4,19,5},
+  {0,33,2,18,1},
+  {0,25,26,17,3},
+};
 int timeBetweenEffects = 500;
-int levels[nLevels] = {27, 14, 12, 13};
+int levels[] = {0,27, 14, 12, 13};
 int currentPattern = 0;
 
 // change the state of a single led
 void turnLed(int x, int y, int z, bool state)
 {
   // x: row, y: column, z: height
-  int level = z - 1;
-  int pos = 4 * (x - 1);
-  pos += (y - 1);
   if (state)
   {
-    digitalWrite(columns[pos], LOW);
-    digitalWrite(levels[level], HIGH);
+    digitalWrite(columns[x][y], LOW);
+    digitalWrite(levels[z], HIGH);
   }
   else
   {
-    digitalWrite(columns[pos], HIGH);
-    digitalWrite(levels[level], LOW);
+    digitalWrite(columns[x][y], HIGH);
+    digitalWrite(levels[z], LOW);
   }
 }
 // change the state of a single level
 void turnLevel(int level, bool state)
 {
   if (state)
-    digitalWrite(levels[level - 1], HIGH);
+    digitalWrite(levels[level], HIGH);
   else
-    digitalWrite(levels[level - 1], LOW);
+    digitalWrite(levels[level], LOW);
 }
 // change the state of a single column
 void turnColumn(int x, int y, bool state)
 {
-  int pos = 4 * (x - 1);
-  pos += (y - 1);
   if (state)
   {
-    digitalWrite(columns[pos], HIGH);
+    digitalWrite(columns[x][y], HIGH);
   }
   else
   {
-    digitalWrite(columns[pos], LOW);
+    digitalWrite(columns[x][y], LOW);
   }
 }
 // Turn all the leds off
@@ -294,11 +295,13 @@ void setup()
 {
   // put your setup code here, to run once:
   // Initialize columns and levels of the cube
-  for (int i = 0; i < nColumns; i++)
+  for (int i = 1; i <= 4; i++)
   {
-    pinMode(columns[i], OUTPUT);
+    for(int j = 1; j <= 4; j++){
+      pinMode(columns[i][j], OUTPUT);
+    }
   }
-  for (int i = 0; i < nLevels; i++)
+  for (int i = 1; i <= nLevels; i++)
   {
     pinMode(levels[i], OUTPUT);
   }
@@ -309,11 +312,13 @@ void setup()
   turnAllLedsOff();
 }
 /*
-flickerLevelByLevel(4) -> 2
+turnAllLedsOff() -> 0
+turnAllLedsOn() -> 1
+flickerLevelByLevel() -> 2
 turnOnColumnByColumn(false) -> 3
 xmasTree() -> 4
 drops() -> 5
-cubeResize -> 6
+cuberesize -> 6
 spiral -> 7
 */
 void loop()
