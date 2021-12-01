@@ -1,20 +1,14 @@
 [
     {
-        "name": "Side by Side",
-        "description": "Prende los focos de lado a lado",
-        "img_url": "https://images.unsplash.com/photo-1476725994324-6f6833ea0631?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-        "value": "1"
-    },
-    {
         "name": "Elevator",
         "description": "Parpadean los niveles de arriba hacia abajo y viceversa",
         "img_url": "https://images.unsplash.com/photo-1580163661435-b2184a20cb24?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1049&q=80",
         "value": "2"
     },
     {
-        "name": "Rain Drops",
-        "description": "Simula la lluvia seleccionando una columna y prendiendo de arriba hacia abajo",
-        "img_url": "https://images.unsplash.com/photo-1544365558-35aa4afcf11f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=736&q=80",
+        "name": "Side by Side",
+        "description": "Prende los focos de lado a lado",
+        "img_url": "https://images.unsplash.com/photo-1476725994324-6f6833ea0631?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
         "value": "3"
     },
     {
@@ -24,15 +18,21 @@
         "value": "4"
     },
     {
-        "name": "Y Pattern",
-        "description": "Description",
-        "img_url": "https://images.unsplash.com/photo-1511268011861-691ed210aae8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+        "name": "Rain Drops",
+        "description": "Simula la lluvia seleccionando una columna y prendiendo de arriba hacia abajo",
+        "img_url": "https://images.unsplash.com/photo-1544365558-35aa4afcf11f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=736&q=80",
         "value": "5"
     },
     {
-        "name": "Z Pattern",
-        "description": "Description",
-        "img_url": "https://images.unsplash.com/photo-1512911122913-094837b6fd2f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+        "name": "Cube Resizing",
+        "description": "Muestra un cubo que cambia de tamaño",
+        "img_url": "https://images.unsplash.com/photo-1527148258266-a4d5b1469786?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
         "value": "6"
+    },
+    {
+        "name": "Spiral",
+        "description": "Genera una espiral de afuera hacia adentro",
+        "img_url": "https://images.unsplash.com/photo-1617814695196-a10077f23651?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=386&q=80",
+        "value": "7"
     }
 ]

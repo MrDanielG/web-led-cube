@@ -3,48 +3,50 @@
 
 const int nColumns = 16;
 const int nLevels = 4;
-int columns[nColumns] = {15, 22, 21, 23, 32, 4, 19, 5, 33, 2, 18, 1, 25, 26, 17, 3};
+int columns [5][5] = {
+  {0,0,0,0,0},
+  {0,15,22,21,23},
+  {0,32,4,19,5},
+  {0,33,2,18,1},
+  {0,25,26,17,3},
+};
 int timeBetweenEffects = 500;
-int levels[nLevels] = {27, 14, 12, 13};
+int levels[] = {0,27, 14, 12, 13};
+int currentPattern = 0;
 
 // change the state of a single led
 void turnLed(int x, int y, int z, bool state)
 {
   // x: row, y: column, z: height
-  int level = z - 1;
-  int pos = 4 * (x - 1);
-  pos += (y - 1);
   if (state)
   {
-    digitalWrite(columns[pos], LOW);
-    digitalWrite(levels[level], HIGH);
+    digitalWrite(columns[x][y], LOW);
+    digitalWrite(levels[z], HIGH);
   }
   else
   {
-    digitalWrite(columns[pos], HIGH);
-    digitalWrite(levels[level], LOW);
+    digitalWrite(columns[x][y], HIGH);
+    digitalWrite(levels[z], LOW);
   }
 }
 // change the state of a single level
 void turnLevel(int level, bool state)
 {
   if (state)
-    digitalWrite(levels[level - 1], HIGH);
+    digitalWrite(levels[level], HIGH);
   else
-    digitalWrite(levels[level - 1], LOW);
+    digitalWrite(levels[level], LOW);
 }
 // change the state of a single column
 void turnColumn(int x, int y, bool state)
 {
-  int pos = 4 * (x - 1);
-  pos += (y - 1);
   if (state)
   {
-    digitalWrite(columns[pos], HIGH);
+    digitalWrite(columns[x][y], HIGH);
   }
   else
   {
-    digitalWrite(columns[pos], LOW);
+    digitalWrite(columns[x][y], LOW);
   }
 }
 // Turn all the leds off
@@ -101,57 +103,194 @@ void turnOnColumnByColumn(bool sense)
     for (int k = 1; k <= 4; k++)
     {
       turnColumn(j, k, false);
-      delay(timeBetweenEffects / 4);
+      delay(timeBetweenEffects / 6);
     }
   }
 }
 
 // Flicker level by level a number of times
-void flickerLevelByLevel(int times)
+void flickerLevelByLevel()
 {
   turnAllLedsOn();
-  for (int c = 0; c < times * 2; c++)
+  for (int i = 4; i > 0; i--)
   {
-    for (int i = 4; i > 0; i--)
-    {
-      turnLevel(i, false);
-      delay(timeBetweenEffects / 4);
-      turnLevel(i, true);
-    }
-    for (int i = 1; i <= 4; i++)
-    {
-      turnLevel(i, false);
-      delay(timeBetweenEffects / 4);
-      turnLevel(i, true);
-    }
+    turnLevel(i, false);
+    delay(timeBetweenEffects / 6);
+    turnLevel(i, true);
+  }
+  for (int i = 1; i <= 4; i++)
+  {
+    turnLevel(i, false);
+    delay(timeBetweenEffects / 6);
+    turnLevel(i, true);
   }
 }
 // random leds (christmas tree)
 void xmasTree()
-{
-  for (int c = 0; c < 50; c++)
-  {
-    int i = random(1, 5);
-    int j = random(1, 5);
-    int k = random(1, 5);
-    turnLed(i, j, k, true);
-    delay(timeBetweenEffects / 4);
-    turnLed(i, j, k, false);
-  }
+{ 
+  int i = random(1, 5);
+  int j = random(1, 5);
+  int k = random(1, 5);
+  turnLed(i, j, k, true);
+  delay(timeBetweenEffects / 4);
+  turnLed(i, j, k, false);
 }
 // Simulate rain drops
 void drops()
 {
-  for (int c = 0; c < 20; c++)
+  int i = random(1, 5);
+  int j = random(1, 5);
+  for (int n = 4; n > 0; n--)
   {
-    int i = random(1, 5);
-    int j = random(1, 5);
-    for (int n = 4; n > 0; n--)
+    turnLed(i, j, n, true);
+    delay(timeBetweenEffects / 6);
+    turnLed(i, j, n, false);
+  }
+}
+// Displays a cube with a custom size
+void customSizeCube(int size, int state) {
+  if (size == 1)
+  {
+    turnLed(1, 1, 1, state);
+  }
+  if (size > 1 && size <= 4)
+  {
+    for (int i=1; i<=size; i++)
     {
-      turnLed(i, j, n, true);
-      delay(timeBetweenEffects / 2);
-      turnLed(i, j, n, false);
+      for (int j=1; j<=size; j++)
+      {
+        for (int k=1; k<=size; k++)
+        {
+          turnLed(k, j, i, state);
+        }
+      }
     }
+  }
+}
+// Displays a cube of custom size larger or smaller than
+// the previous one depending on the direction of the cycle
+void cubeResizing() {
+  for (int i=1; i<4; i++)
+  {
+    customSizeCube(i, true);
+    delay(timeBetweenEffects/6);
+    customSizeCube(i, false);
+  }
+  turnAllLedsOn();
+  delay(timeBetweenEffects/8);
+  turnAllLedsOff();
+  for (int j=3; j>0; j--)
+  {
+    customSizeCube(j, true);
+    delay(timeBetweenEffects/6);
+    customSizeCube(j, false);
+  }
+}
+void turnOffLed(int x, int y, int z)
+{
+  turnLed(x, y, z, false);
+  delay(timeBetweenEffects / 6);
+}
+// The cube is traversed level by level
+// and each level simulates a spiral
+void spiralLevelByLevel()
+{
+  turnAllLedsOn();
+  delay(timeBetweenEffects / 4);
+  for (int level=1; level<=1; level++)
+  {
+    for (int i=1; i<=4; i++)
+    {
+      turnOffLed(1, i, level);
+    }
+    turnLed(2, 4, level, false);
+    turnLed(3, 4, level, false);
+    //turnOffLed(2, 4, level);
+    //turnOffLed(3, 4, level);
+    for (int j=4; j>0; j--)
+    {
+      turnOffLed(4, j, level);
+    }
+    turnOffLed(3, 1, level);
+    for (int k=1; k<4; k++)
+    {
+      turnOffLed(2, k, level);
+    }
+    turnLed(3, 3, level, false);
+    turnLed(3, 2, level, false);
+    //turnOffLed(3, 3, level);
+    //turnOffLed(3, 2, level);
+  }
+}
+// Displays a cube with a custom size
+void customSizeCube(int size, int state) {
+  if (size == 1)
+  {
+    turnLed(1, 1, 1, state);
+  }
+  if (size > 1 && size <= 4)
+  {
+    for (int i=1; i<=size; i++)
+    {
+      for (int j=1; j<=size; j++)
+      {
+        for (int k=1; k<=size; k++)
+        {
+          turnLed(k, j, i, state);
+        }
+      }
+    }
+  }
+}
+// Displays a cube of custom size larger or smaller than
+// the previous one depending on the direction of the cycle
+void cubeResizing() {
+  for (int i=1; i<4; i++)
+  {
+    customSizeCube(i, true);
+    delay(timeBetweenEffects);
+    customSizeCube(i, false);
+  }
+  turnAllLedsOn();
+  delay(timeBetweenEffects);
+  turnAllLedsOff();
+  for (int j=3; j>0; j--)
+  {
+    customSizeCube(j, true);
+    delay(timeBetweenEffects);
+    customSizeCube(j, false);
+  }
+}
+void turnOffLed(int x, int y, int z)
+{
+  turnLed(x, y, z, false);
+  delay(timeBetweenEffects / 4);
+}
+// The cube is traversed level by level
+// and each level simulates a spiral
+void spiralLevelByLevel()
+{
+  turnAllLedsOn();
+  delay(timeBetweenEffects / 2);
+  for (int level=1; level<=4; level++)
+  {
+    for (int i=1; i<=4; i++)
+    {
+      turnOffLed(1, i, level);
+    }
+    turnOffLed(2, 4, level);
+    turnOffLed(3, 4, level);
+    for (int j=4; j>0; j--)
+    {
+      turnOffLed(4, j, level);
+    }
+    turnOffLed(3, 1, level);
+    for (int k=1; k<4; k++)
+    {
+      turnOffLed(2, k, level);
+    }
+    turnOffLed(3, 3, level);
+    turnOffLed(3, 2, level);
   }
 }
 
@@ -174,27 +313,36 @@ void callback(char* topic, byte* payload, unsigned int length)
 
   if ((char)payload[0] == '0')
   {
-    turnAllLedsOff();
+    currentPattern = 0;
   }
   else if((char)payload[0] == '1'){
-    turnAllLedsOff();
-    turnAllLedsOn();
+    currentPattern = 1;
   }
   else if((char)payload[0] == '2'){
-    turnAllLedsOff();
-    flickerLevelByLevel(4);
+    currentPattern = 2;
   }
   else if((char)payload[0] == '3'){
-    turnAllLedsOff();
-    turnOnColumnByColumn(false);
+    currentPattern = 3;
   }
   else if((char)payload[0] == '4'){
-    turnAllLedsOff();
-    xmasTree();
+    currentPattern = 4;
   }
   else if((char)payload[0] == '5'){
+    currentPattern = 5;
+  }
+  else if((char)payload[0] == '6'){
+    currentPattern = 6;
+  }
+  else if((char)payload[0] == '7'){
+    currentPattern = 7;
+  }
+  else if((char)payload[0] == '6'){
     turnAllLedsOff();
-    drops();
+    cubeResizing();
+  }
+  else if((char)payload[0] == '7'){
+    turnAllLedsOff();
+    spiralLevelByLevel();
   }
 }
 void reconnect(){
@@ -226,11 +374,13 @@ void setup()
 {
   // put your setup code here, to run once:
   // Initialize columns and levels of the cube
-  for (int i = 0; i < nColumns; i++)
+  for (int i = 1; i <= 4; i++)
   {
-    pinMode(columns[i], OUTPUT);
+    for(int j = 1; j <= 4; j++){
+      pinMode(columns[i][j], OUTPUT);
+    }
   }
-  for (int i = 0; i < nLevels; i++)
+  for (int i = 1; i <= nLevels; i++)
   {
     pinMode(levels[i], OUTPUT);
   }
@@ -243,10 +393,12 @@ void setup()
 /*
 turnAllLedsOff() -> 0
 turnAllLedsOn() -> 1
-flickerLevelByLevel(4) -> 2
+flickerLevelByLevel() -> 2
 turnOnColumnByColumn(false) -> 3
 xmasTree() -> 4
 drops() -> 5
+cuberesize -> 6
+spiral -> 7
 */
 void loop()
 {
@@ -255,5 +407,24 @@ void loop()
     reconnect();
   }
   client.loop();
+  turnAllLedsOff();
+  if(currentPattern == 2){
+    flickerLevelByLevel();
+  }
+  else if(currentPattern == 3){
+    turnOnColumnByColumn(false);
+  }
+  else if(currentPattern == 4){
+    xmasTree();
+  }
+  else if(currentPattern == 5){
+    drops();
+  }
+  else if(currentPattern == 6){
+    cubeResizing();
+  }
+  else if(currentPattern == 7){
+    spiralLevelByLevel();
+  }
   
 }
