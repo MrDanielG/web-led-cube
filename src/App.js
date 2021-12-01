@@ -7,10 +7,9 @@ import {
     Row,
     Text,
 } from '@nextui-org/react';
-import { useState } from 'react';
+import Paho from 'paho-mqtt';
 import toast from 'react-hot-toast';
 import Particles from 'react-tsparticles';
-// import Paho from 'paho-mqtt';
 import './App.css';
 import ParticleConfig from './data/particlesjs-config.json';
 import { default as patterns } from './data/patterns.json';
@@ -22,55 +21,49 @@ const devImgs = [
 ];
 
 function App() {
-    const [isDisabled, setIsDisabled] = useState(false);
-    // const clientId = 'client_id' + Math.floor(Math.random() * 1000000) + 1;
-    // const client = new Paho.Client('driver.cloudmqtt.com', 38651, clientId);
+    const clientId = 'client_id' + Math.floor(Math.random() * 1000000) + 1;
+    const client = new Paho.Client('driver.cloudmqtt.com', 38625, clientId);
 
-    // const doFail = (e) => console.log(e);
+    const doFail = (e) => console.log(e);
 
-    // const onConnect = () => {
-    //     console.log('Conexión exitosa');
-    //     client.subscribe('dgs_1');
-    // };
+    const onConnect = () => {
+        client.subscribe('entrada_Omar');
+        console.log('Conexión exitosa');
+    };
 
-    // const onMessageArrived = (message) => {
-    //     console.log('Un mensaje ha llegado: ' + message.payloadString);
-    // };
+    const onMessageArrived = (message) => {
+        console.log('Un mensaje ha llegado: ' + message.payloadString);
+    };
 
-    // const onConnectionLost = (responseObject) => {
-    //     if (responseObject.error !== 0) {
-    //         console.log('onConnectionLost: ', responseObject.errorMessage);
-    //     }
-    // };
+    const onConnectionLost = (responseObject) => {
+        if (responseObject.error !== 0) {
+            console.log('onConnectionLost: ', responseObject.errorMessage);
+        }
+    };
 
-    // const command = (value) => {
-    //     console.log(value);
-    //     const message = new Paho.Message(value + '');
-    //     message.destinationName = 'dgs_1';
-    //     client.send(message);
-    // };
+    const command = (value) => {
+        console.log(value);
+        const message = new Paho.Message(value + '');
+        message.destinationName = 'entrada_Omar';
+        client.send(message);
+    };
 
-    // client.onConnectionLost = onConnectionLost;
-    // client.onMessageArrived = onMessageArrived;
+    client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
 
-    // const options = {
-    //     useSSL: true,
-    //     userName: 'clxxwiek',
-    //     password: 'PtsiiKX9xhVm',
-    //     onSuccess: onConnect,
-    //     onFailure: doFail,
-    // };
+    const options = {
+        useSSL: true,
+        userName: 'bmtqnhmu',
+        password: 'KHw4Itds6hTj',
+        onSuccess: onConnect,
+        onFailure: doFail,
+    };
 
-    // client.connect(options);
+    client.connect(options);
 
-    const handleClickedCard = (name) => {
-        if (isDisabled) return;
-
+    const handleClickedCard = (name, value) => {
         toast.success(name);
-        setIsDisabled(true);
-        setTimeout(() => {
-            setIsDisabled(false);
-        }, 3000);
+        command(value);
     };
 
     return (
@@ -96,9 +89,14 @@ function App() {
                             <Card
                                 width="100%"
                                 cover
-                                clickable={!isDisabled}
-                                hoverable={!isDisabled}
-                                onClick={() => handleClickedCard(pattern.name)}
+                                clickable
+                                hoverable
+                                onClick={() =>
+                                    handleClickedCard(
+                                        pattern.name,
+                                        pattern.value
+                                    )
+                                }
                             >
                                 <Card.Header
                                     style={{
@@ -136,8 +134,9 @@ function App() {
                 <div className="center">
                     <p>Done with &#128151; by</p>
                     <Avatar.Group>
-                        {devImgs.map((img) => (
+                        {devImgs.map((img, i) => (
                             <Avatar
+                                key={i}
                                 size="large"
                                 pointer
                                 src={img}
